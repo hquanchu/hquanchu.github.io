@@ -9,13 +9,13 @@ const errors = {
 };
 
 const struct = {
-  root: ['about', 'resume', 'contact', 'talks'],
+  home: ['about', 'resume', 'contact', 'talks'],
   skills: ['proficient', 'familiar'],
 };
 
 const commands = {};
 let systemData = {};
-const rootPath = 'users/codebytere/root';
+const homePath = '/users/quanchu';
 
 const getDirectory = () => localStorage.directory;
 const setDirectory = (dir) => {
@@ -47,7 +47,7 @@ commands.rm = () => errors.noWriteAccess;
 commands.ls = (directory) => {
   console.log(systemData);
   if (directory === '..' || directory === '~') {
-    return systemData['root'];
+    return systemData['home'];
   }
 
   if (directory in struct) {
@@ -61,9 +61,9 @@ commands.ls = (directory) => {
 commands.help = () => systemData.help;
 
 // Display current path.
-commands.path = () => {
+commands.pwd = () => {
   const dir = getDirectory();
-  return dir === 'root' ? rootPath : `${rootPath}/${dir}`;
+  return dir === 'home' ? homePath : `${homePath}/${dir}`;
 };
 
 // See command history.
@@ -82,7 +82,7 @@ commands.cd = (newDirectory) => {
   if (dirs.includes(newDir) && currDir !== newDir) {
     setDirectory(newDir);
   } else if (newDir === '' || newDir === '~' || (newDir === '..' && dirs.includes(currDir))) {
-    setDirectory('root');
+    setDirectory('home');
   } else {
     return errors.invalidDirectory;
   }
@@ -114,7 +114,7 @@ commands.cat = (filename) => {
       const directories = filename.split('/');
       const directory = directories.slice(0, 1).join(',');
       const fileKey = directories.slice(1, directories.length).join(',').split('.')[0];
-      if (directory === 'root' || !struct.hasOwnProperty(directory))
+      if (directory === 'home' || !struct.hasOwnProperty(directory))
         return errors.noSuchFileOrDirectory;
 
       return isFileInSubdirectory(fileKey, directory)
@@ -132,6 +132,7 @@ commands.cat = (filename) => {
 $(() => {
   registerFullscreenToggle();
   registerMinimizedToggle();
+  $('#current-year').text(new Date().getFullYear());
   const cmd = document.getElementById('terminal');
 
   $.ajaxSetup({ cache: false });
@@ -142,7 +143,7 @@ $(() => {
   pages.push($.get('pages/help.html'));
   pages.push($.get('pages/proficient.html'));
   pages.push($.get('pages/resume.html'));
-  pages.push($.get('pages/root.html'));
+  pages.push($.get('pages/home.html'));
   pages.push($.get('pages/skills.html'));
   pages.push($.get('pages/talks.html'));
   $.when
@@ -155,7 +156,7 @@ $(() => {
         helpData,
         proficientData,
         resumeData,
-        rootData,
+        homeData,
         skillsData,
         talksData,
       ) => {
@@ -165,7 +166,7 @@ $(() => {
         systemData['help'] = helpData[0];
         systemData['proficient'] = proficientData[0];
         systemData['resume'] = resumeData[0];
-        systemData['root'] = rootData[0];
+        systemData['home'] = homeData[0];
         systemData['skills'] = skillsData[0];
         systemData['talks'] = talksData[0];
       },
