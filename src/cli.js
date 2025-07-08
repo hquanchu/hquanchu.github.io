@@ -9,7 +9,7 @@ const errors = {
 };
 
 const struct = {
-  home: ['about', 'resume', 'contact', 'talks'],
+  home: ['about', 'resume', 'contact', ],
   skills: ['proficient', 'familiar'],
 };
 
@@ -145,7 +145,6 @@ $(() => {
   pages.push($.get('pages/resume.html'));
   pages.push($.get('pages/home.html'));
   pages.push($.get('pages/skills.html'));
-  pages.push($.get('pages/talks.html'));
   $.when
     .apply($, pages)
     .done(
@@ -158,7 +157,6 @@ $(() => {
         resumeData,
         homeData,
         skillsData,
-        talksData,
       ) => {
         systemData['about'] = aboutData[0];
         systemData['contact'] = contactData[0];
@@ -168,7 +166,6 @@ $(() => {
         systemData['resume'] = resumeData[0];
         systemData['home'] = homeData[0];
         systemData['skills'] = skillsData[0];
-        systemData['talks'] = talksData[0];
       },
     );
 
