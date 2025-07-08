@@ -6,7 +6,7 @@ class Shell {
     this.setupListeners(term);
     this.term = term;
 
-    localStorage.directory = 'root';
+    localStorage.directory = 'home';
     localStorage.history = JSON.stringify('');
     localStorage.historyIndex = -1;
     localStorage.inHistory = false;
@@ -96,7 +96,8 @@ class Shell {
         } else if (cmd && cmd in this.commands) {
           this.runCommand(cmd, args);
           this.resetPrompt(term, prompt);
-          $('.root').last().html(localStorage.directory);
+          const dir = localStorage.directory;
+          $('.path').last().html(dir === 'home' ? '~' : dir);
         } else {
           this.term.innerHTML += 'Error: command not recognized';
           this.resetPrompt(term, prompt);
@@ -160,7 +161,7 @@ class Shell {
     $('#terminal').html(
       `<p class="hidden">
           <span class="prompt">
-            <span class="root">${dir}</span>
+            <span class="path">${dir === 'home' ? '~' : dir}</span>
             <span class="tick">$</span>
           </span>
           <span contenteditable="true" class="input" spellcheck="false"></span>

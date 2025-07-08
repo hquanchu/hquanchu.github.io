@@ -1,5 +1,7 @@
-## codebytere's Personal Website
+## quanchu's Personal Website
 
 An interactive `cli `that allows you to learn about me by navigating around a terminal emulator.
 
 Built with JavaScript & less.
+
+Credits to codebytere.
