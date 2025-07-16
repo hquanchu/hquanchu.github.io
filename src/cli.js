@@ -15,7 +15,7 @@ const struct = {
 
 const commands = {};
 let systemData = {};
-const homePath = '/users/quanchu';
+const homePath = '/Users/quanchu';
 
 const getDirectory = () => localStorage.directory;
 const setDirectory = (dir) => {
@@ -169,5 +169,5 @@ $(() => {
       },
     );
 
-  const terminal = new Shell(cmd, commands);
+  const terminal = new Shell(cmd, commands, struct);
 });

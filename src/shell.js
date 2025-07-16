@@ -1,8 +1,9 @@
 /* global $, localStorage */
 
 class Shell {
-  constructor(term, commands) {
+  constructor(term, commands, struct) {
     this.commands = commands;
+    this.struct = struct;
     this.setupListeners(term);
     this.term = term;
 
@@ -70,6 +71,9 @@ class Shell {
       // 46 -> Delete key.
 
       if (evt.keyCode === 9) {
+        const prompt = evt.target;
+        const input = prompt.textContent.trim().split(' ');
+        this.handleTabCompletion(input, prompt);
         evt.preventDefault();
       } else if (evt.keyCode === 27) {
         $('.terminal-window').toggleClass('fullscreen');
@@ -105,6 +109,52 @@ class Shell {
         evt.preventDefault();
       }
     });
+  }
+
+  setCursorToEnd(element) {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  handleTabCompletion(input, prompt) {
+    const cmd = input[0].toLowerCase();
+    const arg = input[1];
+    const getDirectory = () => localStorage.directory;
+    const currDir = getDirectory();
+
+    if (arg) {
+      let candidates;
+      if (cmd === 'cd' || cmd === 'ls') {
+        candidates = Object.keys(this.struct);
+      } else {
+        const dir = this.struct[currDir];
+        if (dir) {
+          candidates = dir;
+        }
+      }
+
+      if (candidates) {
+        const autocomplete = candidates.filter((item) => item.startsWith(arg));
+        if (autocomplete.length === 1) {
+          let completion = autocomplete[0];
+          if (cmd === 'cat') {
+            completion += '.txt';
+          }
+          prompt.textContent = cmd + ' ' + completion;
+          this.setCursorToEnd(prompt);
+        }
+      }
+    } else {
+      const autocomplete = Object.keys(this.commands).filter((item) => item.startsWith(cmd));
+      if (autocomplete.length === 1) {
+        prompt.textContent = autocomplete[0] + ' ';
+        this.setCursorToEnd(prompt);
+      }
+    }
   }
 
   runCommand(cmd, args) {
